@@ -6,14 +6,14 @@ from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 
 # ページ構成とモデルの対応
 PAGES = {
-    "リアルタイム人数カウント": "yolov8n.pt",
-    "事前学習モデルで検出": "yolov8n.pt",
-    "校章を検出してみよう": "best.pt"
+    "体験①事前学習モデルで検出": "yolo11n.pt",
+    "体験②リアルタイム人数カウント": "yolo11n.pt",
+    "体験③校章を検出してみよう": "best.pt"
 }
 
 # ページ状態の初期化
 if "page" not in st.session_state:
-    st.session_state.page = "リアルタイム人数カウント"
+    st.session_state.page = "体験①事前学習モデルで検出"
 
 # サイドバーでページ選択（ボタン）
 st.sidebar.title("📂 ページ選択")
@@ -34,7 +34,7 @@ st.title(f"📷 {page}")
 
 class PersonCounter(VideoTransformerBase):
     def __init__(self):
-        self.model = YOLO(PAGES["リアルタイム人数カウント"])
+        self.model = YOLO(PAGES["体験②リアルタイム人数カウント"])
         self.last_frame_time = time.time()
         self.target_fps = 5
         self.person_count = 0
@@ -77,7 +77,7 @@ class ObjectDetector(VideoTransformerBase):
         self.last_frame_time = time.time()
         self.target_fps = 5
         
-        if "校章を検出してみよう" in page:
+        if "体験③校章を検出してみよう" in page:
             self.conf = 0.6
         else:
             self.conf = 0.25
@@ -93,7 +93,7 @@ class ObjectDetector(VideoTransformerBase):
 
         results = self.model(flipped_img, verbose=False, conf=self.conf)
 
-        if "校章を検出してみよう" in page:
+        if "体験③校章を検出してみよう" in page:
             results[0].names = {0: "UOH"}
 
         annotated_img = results[0].plot()
@@ -102,7 +102,7 @@ class ObjectDetector(VideoTransformerBase):
 #---
 
 # 各ページの実行とUIの描画
-if page == "リアルタイム人数カウント":
+if page == "体験②リアルタイム人数カウント":
     ctx = webrtc_streamer(key="person-counter", video_processor_factory=PersonCounter)
     
     # 映像処理が実行されている間、人数表示を更新
