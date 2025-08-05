@@ -87,7 +87,4 @@ else:
             annotated = results[0].plot()
             FRAME_WINDOW.image(annotated, channels="BGR")
 
-            # if st.button("🛑 停止", key=f"stop_button_{page}"):
-            #     break
-
         cap.release()
